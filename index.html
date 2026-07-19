@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Maytenia va a ordenar la gestión de prestaciones de discapacidad con todas tus obras sociales y prepagas en un solo lugar. Sé de los primeros en probarla.">
+  <title>Maytenia | Para prestadores de discapacidad</title>
+
+  <!-- TODO: insertar aquí el script de medición de visitas (ej. Google Analytics / Plausible) -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Literata:opsz,wght@7..72,600;7..72,700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── Tokens ── */
+    :root {
+      --ink-900:           #0f172a;
+      --ink-700:           #334155;
+      --ink-500:           #64748b;
+      --indigo-900:        #3D2B7D;
+      --indigo-700:        #4338ca;
+      --teal-500:          #4BCCAA;
+      --sand-100:          #f8fafc;
+      --line-soft:         #dbe1ef;
+      --focus:             #f59e0b;
+      --white:             #ffffff;
+    }
+
+    /* ── Reset mínimo ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      color: var(--ink-900);
+      background:
+        radial-gradient(circle at 6% 8%,  rgba(79, 70, 229, 0.10) 0, transparent 42%),
+        radial-gradient(circle at 90% 14%, rgba(75, 204, 170, 0.14) 0, transparent 40%),
+        linear-gradient(180deg, #f8fafc 0%, #f8faff 30%, #ffffff 100%);
+      font-family: "Manrope", system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3 {
+      font-family: "Literata", Georgia, serif;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink-900);
+    }
+
+    /* ── Foco accesible ── */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+      border-radius: 8px;
+    }
+
+    /* ── Layout ── */
+    .page-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ── Barra superior ── */
+    .topbar {
+      padding: 20px 0 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-name {
+      font-family: "Manrope", system-ui, sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-900);
+    }
+
+    /* ── Tag etiqueta ── */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--line-soft);
+      background: rgba(255, 255, 255, 0.82);
+      color: var(--indigo-900);
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .tag-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--teal-500);
+      display: inline-block;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 48px 0 36px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.75rem, 5.5vw, 2.375rem);
+      margin-top: 8px;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--indigo-700);
+    }
+
+    .hero p {
+      font-size: 1.0625rem;
+      color: var(--ink-700);
+      max-width: 560px;
+    }
+
+    .hero .hero-scene {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--ink-500);
+      margin-top: 14px;
+      margin-bottom: 0;
+      max-width: 560px;
+    }
+
+    .hero .hero-answer {
+      font-family: "Literata", Georgia, serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--indigo-700);
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+      margin-top: 10px;
+      max-width: none;
+    }
+
+    /* ── Value prop ── */
+    .value-prop {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--ink-900);
+      border-left: 3px solid var(--teal-500);
+      padding-left: 12px;
+      margin-bottom: 22px;
+      line-height: 1.4;
+    }
+
+    /* ── Divisor ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--line-soft) 20%, var(--line-soft) 80%, transparent 100%);
+      margin: 36px 0;
+    }
+
+    /* ── Lista de beneficios ── */
+    .benefits {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .benefits li {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      align-items: start;
+      gap: 12px;
+    }
+
+    .benefit-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(61,43,125,0.10), rgba(75,204,170,0.14));
+      border: 1px solid rgba(61,43,125,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .benefit-icon svg {
+      width: 16px;
+      height: 16px;
+      color: var(--indigo-900);
+    }
+
+    .benefit-text strong {
+      display: block;
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--ink-900);
+      line-height: 1.3;
+    }
+
+    .benefit-text span {
+      font-size: 0.875rem;
+      color: var(--ink-700);
+    }
+
+    /* ── Formulario ── */
+    .form-card {
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid var(--line-soft);
+      border-radius: 20px;
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.09);
+      padding: 32px 28px;
+      margin: 40px 0 0;
+    }
+
+    .form-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+    }
+
+    .form-card > p {
+      font-size: 0.9375rem;
+      color: var(--ink-700);
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--ink-700);
+      letter-spacing: 0.02em;
+    }
+
+    .form-group label .optional {
+      font-weight: 500;
+      color: var(--ink-500);
+      margin-left: 4px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--line-soft);
+      border-radius: 10px;
+      font-family: "Manrope", system-ui, sans-serif;
+      font-size: 0.9375rem;
+      color: var(--ink-900);
+      background: var(--white);
+      transition: border-color 160ms ease;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .form-group input::placeholder {
+      color: var(--ink-500);
+    }
+
+    .form-group input:hover,
+    .form-group select:hover {
+      border-color: #b8c4e8;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--indigo-700);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.14);
+    }
+
+    .form-group textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--line-soft);
+      border-radius: 10px;
+      font-family: "Manrope", system-ui, sans-serif;
+      font-size: 0.9375rem;
+      color: var(--ink-900);
+      background: var(--white);
+      transition: border-color 160ms ease;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .form-group textarea::placeholder {
+      color: var(--ink-500);
+    }
+
+    .form-group textarea:hover {
+      border-color: #b8c4e8;
+    }
+
+    .select-wrap {
+      position: relative;
+    }
+
+    .select-wrap::after {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 6px solid var(--ink-500);
+    }
+
+    .btn-primary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 14px 20px;
+      background: linear-gradient(135deg, var(--indigo-900), var(--indigo-700));
+      color: #f8fafc;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      font-family: "Manrope", system-ui, sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+      margin-top: 20px;
+      text-decoration: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 22px rgba(61, 43, 125, 0.28);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    /* ── Badge "en desarrollo" ── */
+    .dev-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(245, 158, 11, 0.10);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #92400e;
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      padding: 7px 12px;
+      margin-bottom: 22px;
+    }
+
+    .dev-badge svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    /* ── Disclaimer legal ── */
+    .legal {
+      font-size: 0.78125rem;
+      color: var(--ink-500);
+      line-height: 1.5;
+      margin-top: 12px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 28px 0 40px;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line-soft);
+    }
+
+    .footer-brand {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--ink-500);
+    }
+
+    .footer-copy {
+      font-size: 0.75rem;
+      color: var(--ink-500);
+    }
+
+    /* ── Animación de entrada ── */
+    @keyframes revealUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      animation: revealUp 560ms ease forwards;
+    }
+
+    .reveal-1 { animation-delay:  60ms; }
+    .reveal-2 { animation-delay: 140ms; }
+    .reveal-3 { animation-delay: 220ms; }
+    .reveal-4 { animation-delay: 300ms; }
+    .reveal-5 { animation-delay: 380ms; }
+
+    /* ── Circuit note ── */
+    .circuit-note {
+      font-size: 0.875rem;
+      color: var(--ink-500);
+      font-style: italic;
+      margin-top: 14px;
+      border-left: 2px solid var(--teal-500);
+      padding-left: 10px;
+    }
+
+    /* ── Submit note ── */
+    .submit-note {
+      font-size: 0.8125rem;
+      color: var(--ink-500);
+      text-align: center;
+      margin-top: 18px;
+      margin-bottom: -4px;
+    }
+
+    /* ── Privacidad expandible ── */
+    .privacy-details {
+      margin-top: 16px;
+      border: 1px solid var(--line-soft);
+      border-radius: 10px;
+      overflow: hidden;
+      background: rgba(248, 250, 252, 0.7);
+    }
+
+    .privacy-details summary {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--ink-700);
+      padding: 11px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      list-style: none;
+      user-select: none;
+    }
+
+    .privacy-details summary::-webkit-details-marker { display: none; }
+
+    .privacy-details summary::before {
+      content: "▸";
+      font-size: 10px;
+      color: var(--indigo-700);
+      display: inline-block;
+      transition: transform 200ms ease;
+    }
+
+    .privacy-details[open] summary::before {
+      transform: rotate(90deg);
+    }
+
+    .privacy-body {
+      padding: 0 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .privacy-body p {
+      font-size: 0.78125rem;
+      color: var(--ink-500);
+      line-height: 1.55;
+    }
+
+    .privacy-body p strong {
+      color: var(--ink-700);
+    }
+
+    .privacy-body a {
+      color: var(--indigo-700);
+      text-underline-offset: 2px;
+    }
+
+    /* ── Confirmación de envío ── */
+    .form-confirm {
+      padding: 8px 0 4px;
+      outline: none;
+    }
+
+    .form-confirm p {
+      font-size: 0.9375rem;
+      color: var(--ink-700);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .confirm-title {
+      font-family: "Literata", Georgia, serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--ink-900);
+      margin-bottom: 14px;
+    }
+
+    .form-confirm a {
+      color: var(--indigo-700);
+      text-underline-offset: 2px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .form-card { padding: 24px 18px; }
+      .hero { padding: 32px 0 24px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrap">
+
+    <!-- ── Topbar ── -->
+    <header class="topbar reveal reveal-1">
+      <svg width="30" height="30" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="100" height="100" rx="18" fill="#3D2B7D"/>
+        <line x1="16" y1="34" x2="84" y2="34" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+        <line x1="24" y1="34" x2="20" y2="72" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+        <line x1="42" y1="34" x2="40" y2="72" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+        <line x1="58" y1="34" x2="60" y2="72" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+        <line x1="76" y1="34" x2="80" y2="72" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="20" cy="76" r="5" fill="#4BCCAA"/>
+        <circle cx="40" cy="76" r="5" fill="#4BCCAA"/>
+        <circle cx="60" cy="76" r="5" fill="#4BCCAA"/>
+        <circle cx="80" cy="76" r="5" fill="#4BCCAA"/>
+      </svg>
+      <span class="brand-name">Maytenia</span>
+    </header>
+
+    <!-- ── Hero ── -->
+    <main>
+      <section class="hero">
+        <div class="reveal reveal-2">
+          <span class="tag"><span class="tag-dot" aria-hidden="true"></span>Para prestadores de discapacidad</span>
+        </div>
+
+        <p class="hero-scene reveal reveal-3">El sábado a la mañana, armando carpetas otra vez.</p>
+
+        <h1 class="reveal reveal-3">
+          Cada obra social pide algo distinto, y lo que pide de verdad no siempre está escrito.
+        </h1>
+
+        <p class="hero-answer reveal reveal-3">Por eso estamos construyendo Maytenia.</p>
+      </section>
+
+      <div class="divider reveal reveal-4" role="separator"></div>
+
+      <!-- ── Qué resuelve ── -->
+      <section aria-labelledby="benefits-heading">
+        <p class="value-prop reveal reveal-4">Un solo lugar para preparar, presentar y seguir la documentación de cada obra social o prepaga.</p>
+
+        <h2 id="benefits-heading" style="font-size:1.125rem; font-weight:800; margin-bottom:18px; font-family:'Manrope',sans-serif; letter-spacing:-0.01em;" class="reveal reveal-4">
+          En qué estamos trabajando
+        </h2>
+
+        <ul class="benefits reveal reveal-5" role="list">
+          <li>
+            <div class="benefit-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+            </div>
+            <div class="benefit-text">
+              <strong>Evitar trabas en la autorización</strong>
+              <span>Saber qué exige cada obra social antes de presentar, para que la autorización no se demore por documentación incompleta.</span>
+            </div>
+          </li>
+          <li>
+            <div class="benefit-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div class="benefit-text">
+              <strong>Tener todos los trámites a la vista</strong>
+              <span>Ver en una sola pantalla en qué instancia está cada presentación, sin buscar en mails ni en planillas propias.</span>
+            </div>
+          </li>
+          <li>
+            <div class="benefit-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+            </div>
+            <div class="benefit-text">
+              <strong>No volver a empezar de cero</strong>
+              <span>Reutilizar lo que ya está vigente en cada renovación, en vez de rearmar la carpeta completa.</span>
+            </div>
+          </li>
+          <li>
+            <div class="benefit-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+            </div>
+            <div class="benefit-text">
+              <strong>Una sola lógica para todas</strong>
+              <span>Trabajar con obras sociales y prepagas sin tener que buscar o recordar las reglas de cada una.</span>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- ── Formulario ── -->
+      <div class="form-card reveal reveal-5">
+
+        <div class="dev-badge" role="note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          Maytenia se encuentra en etapa de desarrollo y aún no está disponible.
+        </div>
+
+        <h2>Dejá tus datos si querés probarla</h2>
+        <p>Te contamos cómo avanza y te avisamos cuando puedas probarla.</p>
+
+        <!--
+          TODO: conectar este formulario a un servicio de backend o formulario externo
+          (ej. Formspree, HubSpot, Mailchimp, Notion API, etc.)
+          Reemplazá action="" con la URL del endpoint correspondiente y ajustá method si es necesario.
+        -->
+        <form id="registro" action="" method="post" aria-label="Formulario de registro anticipado">
+
+          <div class="form-group">
+            <label for="email">
+              Correo electrónico
+              <span style="color:#dc2626;margin-left:2px;" aria-hidden="true">*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              autocomplete="email"
+              required
+              placeholder="tucorreo@ejemplo.com"
+              aria-required="true"
+              aria-describedby="email-hint"
+            >
+            <span id="email-hint" style="font-size:0.78125rem;color:var(--ink-500);">Ahí te vamos a escribir.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="nombre">
+              Nombre
+              <span class="optional">(opcional)</span>
+            </label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              autocomplete="given-name"
+              placeholder="¿Cómo te llamás?"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="tipo-prestador">
+              Tipo de prestador
+              <span style="color:#dc2626;margin-left:2px;" aria-hidden="true">*</span>
+            </label>
+            <div class="select-wrap">
+              <select
+                id="tipo-prestador"
+                name="tipo-prestador"
+                required
+                aria-required="true"
+              >
+                <option value="">Seleccioná una opción…</option>
+                <option value="institucion">Institución o centro</option>
+                <option value="equipo">Equipo de profesionales</option>
+                <option value="independiente">Profesional independiente</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="tipo-servicio">
+              Tipo de servicio
+              <span class="optional">(opcional)</span>
+            </label>
+            <div class="select-wrap">
+              <select id="tipo-servicio" name="tipo-servicio">
+                <option value="">Seleccioná una opción…</option>
+                <option value="estimulacion-temprana">Estimulación temprana</option>
+                <option value="apoyo-integracion">Apoyo a la integración escolar</option>
+                <option value="centro-de-dia">Centro de día</option>
+                <option value="centro-educativo-terapeutico">Centro educativo terapéutico</option>
+                <option value="rehabilitacion">Rehabilitación</option>
+                <option value="hogar-residencia">Hogar o residencia</option>
+                <option value="prestaciones-apoyo">Prestaciones de apoyo</option>
+                <option value="transporte">Transporte</option>
+                <option value="escolaridad-formacion">Escolaridad o formación laboral</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="comentario">
+              Contanos qué esperás de una herramienta así
+              <span class="optional">(opcional)</span>
+            </label>
+            <textarea
+              id="comentario"
+              name="comentario"
+              rows="4"
+              placeholder="Cualquier detalle que quieras contarnos…"
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary">
+            Quiero probarla cuando esté lista
+          </button>
+
+        </form>
+
+        <div id="form-confirm" class="form-confirm" role="status" aria-live="polite" tabindex="-1" hidden>
+          <p class="confirm-title">Gracias por dejarnos tus datos.</p>
+          <p>Tu respuesta nos ayuda a construir Maytenia.</p>
+          <p>Si querés ver el prototipo antes que el resto, escribinos a <a href="mailto:contacto@maytenia.com">contacto@maytenia.com</a>.</p>
+        </div>
+
+        <details class="privacy-details">
+          <summary>Qué hacemos con tus datos</summary>
+          <div class="privacy-body">
+            <p>Maytenia es una plataforma en desarrollo, creada por Carolina Centeno y Rosario Román como trabajo de una maestría en administración de negocios de la salud. Todavía no es un servicio operativo.</p>
+            <p>Los datos que dejás se usan para contarte cómo avanza y para invitarte a probarla. No se usan para enviar publicidad ni se comparten con terceros.</p>
+            <p>En el trabajo académico la información se presenta de forma agregada y anonimizada. Ningún dato personal de las personas registradas va a ser expuesto en ningún documento ni publicación.</p>
+            <p>Podés pedir la eliminación de tus datos en cualquier momento escribiendo a <a href="mailto:contacto@maytenia.com">contacto@maytenia.com</a>. Si el proyecto no avanza, los datos se eliminan y no se usan para ninguna otra finalidad.</p>
+            <p>El tratamiento se ajusta a la Ley 25.326 de Protección de Datos Personales.</p>
+          </div>
+        </details>
+      </div>
+    </main>
+
+    <!-- ── Footer ── -->
+    <footer>
+      <div class="footer-inner">
+        <span class="footer-brand">Maytenia · 2026</span>
+      </div>
+    </footer>
+
+  </div><!-- /page-wrap -->
+
+  <script>
+    /*
+     * Confirmación de envío — comportamiento mientras el formulario no esté conectado.
+     *
+     * CUANDO CONECTES A UN SERVICIO REAL (Formspree, HubSpot, Mailchimp, etc.):
+     *   1. Reemplazá action="" en el <form> por la URL del endpoint del servicio.
+     *   2. Eliminá el bloque addEventListener completo que está debajo de este comentario.
+     *      El servicio se encargará de la respuesta o redirección tras el envío.
+     */
+    document.getElementById('registro').addEventListener('submit', function (e) {
+      e.preventDefault();
+      this.hidden = true;
+      var confirmacion = document.getElementById('form-confirm');
+      confirmacion.hidden = false;
+      confirmacion.focus();
+    });
+  </script>
+
+</body>
+</html>
