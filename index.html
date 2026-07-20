@@ -18,17 +18,6 @@
   gtag('js', new Date());
   gtag('config', 'G-3ESTKMB5JB');
 </script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3ESTKMB5JB"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-
-  gtag('js', new Date());
-  gtag('config', 'G-3ESTKMB5JB');
-</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Literata:opsz,wght@7..72,600;7..72,700&display=swap" rel="stylesheet">
@@ -986,44 +975,74 @@
       sel.addEventListener('change', actualizarGrupos);
     })();
 
-    /* ── Envío con Formspree ── */
-    document.getElementById('registro').addEventListener('submit', function (e) {
-      e.preventDefault();
-      var form    = this;
-      var btn     = form.querySelector('[type="submit"]');
-      var ok      = document.getElementById('form-confirm');
-      var err     = document.getElementById('form-error');
-      var lblOrig = btn.textContent;
+    /* ── Envío con Formspree y medición GA4 ── */
+(function () {
+  var form    = document.getElementById('registro');
+  var btn     = form.querySelector('[type="submit"]');
+  var ok      = document.getElementById('form-confirm');
+  var err     = document.getElementById('form-error');
+  var lblOrig = btn.textContent;
 
-      btn.disabled = true;
-      btn.textContent = 'Enviando…';
-      err.hidden = true;
+  /* Mide cada clic en el botón, incluso si faltan campos obligatorios */
+  btn.addEventListener('click', function () {
+    if (typeof gtag === 'function') {
+      gtag('event', 'click_registro', {
+        form_id: 'registro_prestadores'
+      });
+    }
+  });
 
-      fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { 'Accept': 'application/json' }
-      })
-      .then(function (res) {
-        if (res.ok) {
-          form.hidden = true;
-          ok.hidden = false;
-          ok.focus();
-        } else {
-          return res.json().then(function (data) {
-            throw new Error(data.errors
-              ? data.errors.map(function (er) { return er.message; }).join(', ')
-              : 'Error');
+  /* Envía el formulario a Formspree */
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    btn.disabled = true;
+    btn.textContent = 'Enviando…';
+    err.hidden = true;
+
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
+    .then(function (res) {
+      if (res.ok) {
+
+        /* Solo cuenta el lead cuando Formspree confirma el envío */
+        if (typeof gtag === 'function') {
+          gtag('event', 'generate_lead', {
+            method: 'formspree',
+            form_id: 'registro_prestadores'
           });
         }
-      })
-      .catch(function () {
-        btn.disabled = false;
-        btn.textContent = lblOrig;
-        err.hidden = false;
-        err.focus();
-      });
+
+        form.reset();
+        form.hidden = true;
+        ok.hidden = false;
+        ok.focus();
+
+      } else {
+        return res.json().then(function (data) {
+          throw new Error(
+            data.errors
+              ? data.errors.map(function (er) {
+                  return er.message;
+                }).join(', ')
+              : 'Error'
+          );
+        });
+      }
+    })
+    .catch(function () {
+      btn.disabled = false;
+      btn.textContent = lblOrig;
+      err.hidden = false;
+      err.focus();
     });
+  });
+})();
   </script>
 
 </body>
