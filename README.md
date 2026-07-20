@@ -1,4 +1,4 @@
-[index.html](https://github.com/user-attachments/files/30172219/index.html)
+[index.html](https://github.com/user-attachments/files/30172416/index.html)
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -325,6 +325,102 @@
       border-left: 5px solid transparent;
       border-right: 5px solid transparent;
       border-top: 6px solid var(--ink-500);
+    }
+
+    fieldset.form-fieldset {
+      border: none;
+      padding: 0;
+      margin: 0 0 14px;
+    }
+
+    fieldset.form-fieldset legend {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--ink-700);
+      letter-spacing: 0.02em;
+      margin-bottom: 8px;
+      width: 100%;
+    }
+
+    fieldset.form-fieldset legend .optional {
+      font-weight: 500;
+      color: var(--ink-500);
+      margin-left: 4px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      cursor: pointer;
+      font-size: 0.9375rem;
+      color: var(--ink-900);
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+      accent-color: var(--indigo-700);
+      cursor: pointer;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+    fieldset.form-fieldset {
+      border: none;
+      padding: 0;
+      margin: 0 0 14px;
+    }
+
+    fieldset.form-fieldset legend {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--ink-700);
+      letter-spacing: 0.02em;
+      margin-bottom: 8px;
+      width: 100%;
+    }
+
+    fieldset.form-fieldset legend .optional {
+      font-weight: 500;
+      color: var(--ink-500);
+      margin-left: 4px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      cursor: pointer;
+      font-size: 0.9375rem;
+      color: var(--ink-900);
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+      accent-color: var(--indigo-700);
+      cursor: pointer;
     }
 
     .btn-primary {
@@ -694,6 +790,21 @@
           </div>
 
           <div class="form-group">
+            <label for="cant-financiadores">
+              ¿Con cuántos financiadores trabás actualmente?
+              <span class="optional">(opcional)</span>
+            </label>
+            <div class="select-wrap">
+              <select id="cant-financiadores" name="cant-financiadores">
+                <option value="">Seleccioná una opción…</option>
+                <option value="1-3">1 a 3</option>
+                <option value="4-10">4 a 10</option>
+                <option value="mas-de-10">Más de 10</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
             <label for="tipo-prestador">
               Tipo de prestador
               <span style="color:#dc2626;margin-left:2px;" aria-hidden="true">*</span>
@@ -706,34 +817,47 @@
                 aria-required="true"
               >
                 <option value="">Seleccioná una opción…</option>
-                <option value="institucion">Institución o centro</option>
-                <option value="equipo">Equipo de profesionales</option>
                 <option value="independiente">Profesional independiente</option>
+                <option value="equipo">Equipo de profesionales</option>
+                <option value="institucion">Institución o centro</option>
+                <option value="transporte">Empresa de transporte especial</option>
               </select>
             </div>
           </div>
 
-          <div class="form-group">
-            <label for="tipo-servicio">
-              Tipo de servicio
-              <span class="optional">(opcional)</span>
-            </label>
-            <div class="select-wrap">
-              <select id="tipo-servicio" name="tipo-servicio">
-                <option value="">Seleccioná una opción…</option>
-                <option value="estimulacion-temprana">Estimulación temprana</option>
-                <option value="apoyo-integracion">Apoyo a la integración escolar</option>
-                <option value="centro-de-dia">Centro de día</option>
-                <option value="centro-educativo-terapeutico">Centro educativo terapéutico</option>
-                <option value="rehabilitacion">Rehabilitación</option>
-                <option value="hogar-residencia">Hogar o residencia</option>
-                <option value="prestaciones-apoyo">Prestaciones de apoyo</option>
-                <option value="transporte">Transporte</option>
-                <option value="escolaridad-formacion">Escolaridad o formación laboral</option>
-                <option value="otro">Otro</option>
-              </select>
+          <div id="servicio-anuncio" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+          <fieldset id="grupo-profesionales" class="form-fieldset" hidden>
+            <legend>Especialidad <span class="optional">(opcional)</span></legend>
+            <div class="checkbox-group">
+              <label class="checkbox-item"><input type="checkbox" name="especialidad[]" value="kinesio"> Kinesiología o fisioterapia</label>
+              <label class="checkbox-item"><input type="checkbox" name="especialidad[]" value="fono"> Fonoaudiología</label>
+              <label class="checkbox-item"><input type="checkbox" name="especialidad[]" value="to"> Terapia ocupacional</label>
+              <label class="checkbox-item"><input type="checkbox" name="especialidad[]" value="psico"> Psicología</label>
+              <label class="checkbox-item"><input type="checkbox" name="especialidad[]" value="psicopeda"> Psicopedagogía</label>
+              <label class="checkbox-item"><input type="checkbox" name="especialidad[]" value="psicomotricidad"> Psicomotricidad</label>
+              <label class="checkbox-item"><input type="checkbox" name="especialidad[]" value="musico"> Musicoterapia</label>
+              <label class="checkbox-item"><input type="checkbox" name="especialidad[]" value="estimulacion"> Estimulación temprana</label>
+              <label class="checkbox-item"><input type="checkbox" name="especialidad[]" value="maestro-apoyo"> Maestro de apoyo o integrador</label>
+              <label class="checkbox-item"><input type="checkbox" name="especialidad[]" value="acompanante"> Acompañante terapéutico</label>
+              <label class="checkbox-item"><input type="checkbox" name="especialidad[]" value="otra-prof"> Otra</label>
             </div>
-          </div>
+          </fieldset>
+
+          <fieldset id="grupo-instituciones" class="form-fieldset" hidden>
+            <legend>Modalidad que brindan <span class="optional">(opcional)</span></legend>
+            <div class="checkbox-group">
+              <label class="checkbox-item"><input type="checkbox" name="modalidad[]" value="centro-de-dia"> Centro de día</label>
+              <label class="checkbox-item"><input type="checkbox" name="modalidad[]" value="cet"> Centro educativo terapéutico</label>
+              <label class="checkbox-item"><input type="checkbox" name="modalidad[]" value="hospital-dia"> Hospital de día</label>
+              <label class="checkbox-item"><input type="checkbox" name="modalidad[]" value="rehab-modulo"> Rehabilitación ambulatoria en módulo integral</label>
+              <label class="checkbox-item"><input type="checkbox" name="modalidad[]" value="escolaridad"> Escolaridad pre primaria o primaria</label>
+              <label class="checkbox-item"><input type="checkbox" name="modalidad[]" value="formacion-laboral"> Formación laboral o aprestamiento laboral</label>
+              <label class="checkbox-item"><input type="checkbox" name="modalidad[]" value="hogar"> Hogar, pequeño hogar o residencia</label>
+              <label class="checkbox-item"><input type="checkbox" name="modalidad[]" value="estimulacion-inst"> Estimulación temprana</label>
+              <label class="checkbox-item"><input type="checkbox" name="modalidad[]" value="otra-inst"> Otra</label>
+            </div>
+          </fieldset>
 
           <div class="form-group">
             <label for="comentario">
@@ -787,13 +911,61 @@
 
   </div><!-- /page-wrap -->
 
+  <noscript><style>
+    #grupo-profesionales, #grupo-instituciones { display: block !important; }
+    #grupo-profesionales input[type="checkbox"],
+    #grupo-instituciones  input[type="checkbox"] { pointer-events: auto !important; }
+  </style></noscript>
+
   <script>
+    (function () {
+      var sel    = document.getElementById('tipo-prestador');
+      var grpPro = document.getElementById('grupo-profesionales');
+      var grpIns = document.getElementById('grupo-instituciones');
+      var anuncio = document.getElementById('servicio-anuncio');
+
+      function setDisabled(fieldset, disabled) {
+        fieldset.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
+          cb.disabled = disabled;
+        });
+      }
+
+      function actualizarGrupos() {
+        var val = sel.value;
+        var esPro = (val === 'independiente' || val === 'equipo');
+        var esIns = (val === 'institucion');
+
+        grpPro.hidden = !esPro;
+        setDisabled(grpPro, !esPro);
+
+        grpIns.hidden = !esIns;
+        setDisabled(grpIns, !esIns);
+
+        if (esPro) {
+          anuncio.textContent = 'Mostrando el campo Especialidad.';
+        } else if (esIns) {
+          anuncio.textContent = 'Mostrando el campo Modalidad que brindan.';
+        } else if (val === 'transporte') {
+          anuncio.textContent = 'Para empresa de transporte no se requiere especialidad ni modalidad.';
+        } else {
+          anuncio.textContent = '';
+        }
+      }
+
+      /* Inicializar: deshabilitar todos al cargar */
+      setDisabled(grpPro, true);
+      setDisabled(grpIns, true);
+
+      sel.addEventListener('change', actualizarGrupos);
+    })();
+
+    /* ── Envío con Formspree ── */
     document.getElementById('registro').addEventListener('submit', function (e) {
       e.preventDefault();
-      var form   = this;
-      var btn    = form.querySelector('[type="submit"]');
-      var ok     = document.getElementById('form-confirm');
-      var err    = document.getElementById('form-error');
+      var form    = this;
+      var btn     = form.querySelector('[type="submit"]');
+      var ok      = document.getElementById('form-confirm');
+      var err     = document.getElementById('form-error');
       var lblOrig = btn.textContent;
 
       btn.disabled = true;
@@ -812,7 +984,9 @@
           ok.focus();
         } else {
           return res.json().then(function (data) {
-            throw new Error(data.errors ? data.errors.map(function(e){return e.message}).join(', ') : 'Error');
+            throw new Error(data.errors
+              ? data.errors.map(function (er) { return er.message; }).join(', ')
+              : 'Error');
           });
         }
       })
